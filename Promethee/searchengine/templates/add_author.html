@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Add author </title>
+</head>
+<body>
+  <!-- OTHER PAGES -->
+  <a href="/search">Go to main page</a>
+  &nbsp
+  &nbsp
+  <a href="/add_reference">Add a new reference</a>
+  &nbsp
+  &nbsp
+  <a href="/add_author">Add author</a>
+  &nbsp
+  &nbsp
+  <a href="/add_publisher">Add publisher</a>
+  &nbsp
+  &nbsp
+  <a href="/genres">Genres</a>
+  &nbsp
+  &nbsp
+  <a href="/countries">Countries</a>
+
+  <!-- DISPLAY EXISTING AUTHORS -->
+  <p> Check first the author already exists in the DB: </p>
+    <select name="selected_author{{ i }}">
+      {% for author in authors %}
+      <option value="{{ author.author_id }}">{{ author.author_lastname }} {{ author.author_initials }} ({{ author.author_firstnames }}) [{{ author.country_code }}] {{ author.affiliation }} | {{ author.author_email }}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <br>
+
+    <!-- FORM TO ADD A NEW AUTHOR -->
+    <form method="post">
+      {% csrf_token %}
+      Firstname(s) (required):
+      <input type="text" name="firstnames{{ i }}">
+      <br>
+      Lastname (required):
+      <input type="text" name="lastname{{ i }}">
+      <br>
+      Country code (2 letters) (required):
+      <input type="text" name="country_code{{ i }}">
+      <br>
+      Affiliation (optional):
+      <input type="text" name="affiliation{{ i }}">
+      <br>
+      Email (optional):
+      <input type="email" name="email{{ i }}">
+      <br>
+      <br>
+      <button type="submit">Submit</button>
+    </form>
+
+</body>
+</html>

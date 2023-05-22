@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ publisher_name }}</title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+
+    <!-- PUBLISHER DETAILS -->
+	<h1>Publisher: {{ publisher_name }}</h1>
+
+    <!-- UPDATE AND DELETE OPTIONS -->
+        <a href="{% url 'update_publisher' publisher_id=publisher_id %}">Update</a>
+        <a href="{% url 'publisher_detail' publisher_id=publisher_id %}?delete_publisher=TRUE">Delete</a>
+
+    
+    <!-- DISPLAY ERROR WHEN DELETING IF PUBLISHER IS STILL LINKED TO REFERENCES -->
+    <strong> {{ error }} </strong>
+    
+    <!-- DISPLAY REFERENCES FOR THIS PUBLISHER -->
+    <h2> References ({{ references_quantity }} results):</h2>
+	{% if references %}
+		<ul>
+            {% for reference in references %}
+				<li>
+					<strong>Title:</strong> <a href="{% url 'reference_detail' reference.reference_id %}"> {{ reference.title }}</a><br>
+                    <strong>Author(s):</strong> {% for single_author in reference.authors %} <a href="{% url 'author_detail' single_author.author_id %}"> {{ single_author.author_initials }} {{ single_author.author_lastname }}</a>, {% endfor %} <br>
+                    <strong>Year:</strong> {{ reference.year }}<br>
+                    <strong>Volume:</strong> {{ reference.volume }}<br>
+                    <strong>Number:</strong> {{ reference.number }}<br>
+                    <strong>Pages:</strong> {{ reference.pages }}<br>
+                    <strong>Type:</strong> {{ reference.type }}<br>
+					<strong>Genre:</strong> {% for genre in reference.genres %} {{ genre }}, {% endfor %} <br>
+                    <br>
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>No references found for this publisher.</p>
+	{% endif %}
+</body>
+</html>

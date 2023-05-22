@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Genres </title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+
+    <!-- DISPLAY ALL GENRES -->
+    <form method="get">
+        <h2> Search by genre: </h2>
+        {% for genre in genres %}
+        <input type="radio" name="choice" value = "{{genre.keyword_id}}"> {{genre.keyword}}
+        <br>
+        {% endfor %}
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- FORM TO ADD A NEW GENRE -->
+    <form method="post">
+        {% csrf_token %}
+        <h3> Add a new genre: </h3>
+        <input type="text" name="new_genre">
+        <button type="submit">Add</button>
+    </form>
+
+    <!-- DISPLAY ERROR IF NEW GENRE ALREADY EXISTS -->
+    {{ error }}
+
+    <!-- DISPLAY REFERENCES LINKED TO A GENRE -->
+    {% if searched_keyword_id %}
+        <h2>References for the genre "{{ choice_name }}" ({{ references_quantity }} results):</h2>
+        <ul>
+        {% for reference in references %}
+            <li>
+                <strong>Author(s):</strong> {% for single_author in reference.authors %} <a href="{% url 'author_detail' single_author.author_id %}">{{ single_author.author_initials }} {{ single_author.author_lastname }}</a>, {% endfor %} <br>
+                <strong>Title:</strong> <a href="{% url 'reference_detail' reference.reference_id %}">{{ reference.title }}</a><br>
+                <strong>Publisher name:</strong> <a href="{% url 'publisher_detail' reference.publisher_id %}"> {{ reference.publisher_name }}</a> <br>
+                <strong>ISBN/ISSN:</strong> {{ reference.isbn_issn }}<br>
+                <strong>Year:</strong> {{ reference.year }}<br>
+                <strong>Volume:</strong> {{ reference.volume }}<br>
+                <strong>Number:</strong> {{ reference.number }}<br>
+                <strong>Pages:</strong> {{ reference.pages }}<br>
+                <strong>Type:</strong> {{ reference.type }}<br>
+                <br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+</body>
+</html>

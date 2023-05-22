@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Add reference </title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+    
+    <!-- FIRST FORM TO DISPLAY A VARIABLE AMOUNT OF AUTHORS -->
+    <br><br>
+    <form method="get">
+      How many authors? :
+      <br>
+      <input type="text" name="authors_count" placeholder="Enter a number">
+      <button type="submit">Validate</button>
+    </form>
+    
+    {% if authors_count %}
+    <p>You chose {{ authors_count }} authors:</p>
+    {% endif %}
+
+    
+    <!-- SECOND FORM TO ADD A NEW REFERENCE -->
+    {% if authors_count %}
+    <h2> Required fields </h2>
+    <form method="POST">
+      {% csrf_token %}
+      {% for i in loop %}
+      <p> <strong>Author</strong> (position {{ i }}): </p>
+      <select name="selected_author{{ i }}">
+        {% for author in authors %}
+        <option value="{{ author.author_id }}">{{ author.author_lastname }} {{ author.author_initials }} ({{ author.author_firstnames }}) [{{ author.country_code }}] {{ author.affiliation }} | {{ author.author_email }}</option>
+        {% endfor %}
+      </select>
+      {% endfor %}
+      <br>
+      <br>
+
+      <strong>Title:</strong>
+      <input type="text" name="title">
+      <br><br>
+      <strong>Publisher:</strong>
+      <select id="publisher_select" name="publisher_select">
+        {% for publisher in publishers %}
+        <option value="{{ publisher.publisher_id }}">{{ publisher.publisher_name }}</option>
+        {% endfor %}
+      </select>
+      <br><br>
+    <strong>Year:</strong>
+    <input type="text" name="year">
+    <br><br>
+    <strong>Type:</strong>
+    <input type="radio" name="type" value="Theory" checked> Theory
+    <input type="radio" name="type" value="Practice"> Practice
+    <br>
+    <h2> Optional fields </h2>
+    <strong>ISBN/ISSN:</strong>
+    <input type="text" name="isbn_issn">
+    <br>
+    <strong>Volume:</strong>
+    <input type="text" name="volume">
+    <br>
+    <strong>Number:</strong>
+    <input type="text" name="number">
+    <br>
+    <strong>Pages:</strong>
+    <input type="text" name="pages">
+    <br><br>
+    <strong>Genre(s):</strong>
+    <br>
+    {% for genre in genres %}
+    <input type="checkbox" name="selected_genres" value="{{ genre.keyword_id }}"> {{ genre.keyword }}
+    <br>
+    {% endfor %}
+    <br>
+    <input type="submit" value="Submit">
+    {% endif %}
+  </form>
+
+</body>
+</html>

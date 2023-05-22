@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ author_informations.author_initials }} {{author_informations.author_lastname}} </title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+
+    <!-- DISPLAY AUTHOR DETAILS WITH OPTION TO UPDATE OR DELETE -->
+	<h1>Author: {{ author_informations.author_initials }} {{author_informations.author_lastname}} (Firstname: {{ author_informations.author_firstnames }})</h1>
+	<strong>Country:</strong> <a href="{% url 'country_detail' %}?choice={{ author_informations.country_code }}">{{ author_informations.country_code }}</a>
+    <br>
+    <strong>Affiliation:</strong> {{ author_informations.affiliation }}
+    <br>
+    <strong>Email:</strong> {{ author_informations.author_email }}
+	<br>
+    
+    <!-- UPDATE AND DELETE OPTIONS -->
+        <a href="{% url 'update_author' author_id=author_id %}">Update</a>
+        <a href="{% url 'author_detail' author_id=author_id %}?delete_author=TRUE">Delete</a>
+
+    <!-- DISPLAY ERROR WHEN DELETING IF AUTHOR IS STILL LINKED TO REFERENCES -->
+    <strong> {{ error }} </strong>
+
+    <!-- DISPLAY REFERENCES FOR THIS AUTHOR -->
+    <h2> References ({{ references_quantity }} results):</h2>
+
+	{% if references %}
+		<ul>
+			{% for reference in references %}
+				<li>
+                    <strong>Author(s):</strong> {% for single_author in reference.authors %} <a href="{% url 'author_detail' single_author.author_id %}">{{ single_author.author_initials }} {{ single_author.author_lastname }}</a>, {% endfor %} <br>
+					<strong>Title:</strong> <a href="{% url 'reference_detail' reference.reference_id %}">{{ reference.title }}</a><br>
+                    <strong>Publisher:</strong> <a href="{% url 'publisher_detail' reference.publisher_id %}">{{ reference.publisher_name }}</a><br>
+                    <strong>Year:</strong> {{ reference.year }}<br>
+                    <strong>Volume:</strong> {{ reference.volume }}<br>
+                    <strong>Number:</strong> {{ reference.number }}<br>
+                    <strong>Pages:</strong> {{ reference.pages }}<br>
+                    <strong>Type:</strong> {{ reference.type }}<br>
+					<strong>Genre(s):</strong> {% for genre in reference.genres %} {{ genre }}, {% endfor %} <br>
+                    <br>
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>No references found for this author.</p>
+	{% endif %}
+</body>
+</html>

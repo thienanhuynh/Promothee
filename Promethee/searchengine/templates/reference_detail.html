@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reference detail</title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+
+    <!-- REFERENCE DETAILS -->
+    <h1>Reference details below:</h1>
+    <strong>Title:</strong> {{ informations.title }} <br>
+    <strong>Author(s):</strong> {% for single_author in informations.authors %} <a href="{% url 'author_detail' single_author.author_id %}">{{ single_author.author_initials }} {{ single_author.author_lastname }}</a>, {% endfor %} <br>
+    <strong>Publisher:</strong> <a href="{% url 'publisher_detail' informations.publisher_id %}">{{ informations.publisher_name }}</a><br>
+    <strong>ISBN/ISSN:</strong> {{ informations.isbn_issn }}<br>
+    <strong>Year:</strong> {{ informations.year }}<br>
+    <strong>Volume:</strong> {{ informations.volume }}<br>
+    <strong>Number:</strong> {{ informations.number }}<br>
+    <strong>Pages:</strong>{{ informations.pages }}<br>
+    <strong>Type:</strong> {{ informations.type }}<br>
+    <strong>Genres:</strong> {% for genre in informations.genres %}{{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+    <!-- UPDATE AND DELETE OPTIONS -->
+    <form method="get">
+        <a href="{% url 'update_reference' reference_id=reference_id %}">Update</a>
+        <a href="{% url 'reference_detail' reference_id=reference_id %}?delete_reference=TRUE">Delete</a>
+    </form>
+
+
+</body>
+</html>

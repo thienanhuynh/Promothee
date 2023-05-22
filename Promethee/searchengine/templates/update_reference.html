@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reference detail</title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+
+    <!-- DISPLAY CURRENT INFORMATIONS OF THE REFERENCE -->
+    <h1>Reference details below:</h1>
+    
+      <strong>Title:</strong> {{ informations.title }} <br>
+      <strong>Author(s):</strong> {% for single_author in informations.authors %} <a href="{% url 'author_detail' single_author.author_id %}">{{ single_author.author_initials }} {{ single_author.author_lastname }}</a>, {% endfor %} <br>
+      <strong>Publisher:</strong> <a href="{% url 'publisher_detail' informations.publisher_id %}">{{ informations.publisher_name }}</a><br>
+      <strong>ISBN/ISSN:</strong> {{ informations.isbn_issn }}<br>
+      <strong>Year:</strong> {{ informations.year }}<br>
+      <strong>Volume:</strong> {{ informations.volume }}<br>
+      <strong>Number:</strong> {{ informations.number }}<br>
+      <strong>Pages:</strong>{{ informations.pages }}<br>
+      <strong>Type:</strong> {{ informations.type }}<br>
+      <strong>Genres:</strong> {% for genre in informations.genres %}{{ genre.genre_name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+  <!-- UPDATE FORM PRE-FILLED WITH CURRENT INFOMRATIONS -->
+  <form method="POST">
+    {% csrf_token %}
+    <h2> Required fields </h2>
+    
+    {% for author in informations.authors %}
+    <p> Author (position {{ author.author_position }}): </p>
+
+    <select name="selected_author{{ forloop.counter }}">
+      {% for author_choice in authors %}
+      <option value="{{ author_choice.author_id }}" {% if author_choice.author_id == author.author_id %} selected {% endif %}> <!-- to display existing authors as default value -->
+        {{ author_choice.author_lastname }} {{ author_choice.author_initials }} ({{ author_choice.author_firstnames }}) [{{ author_choice.country_code }}] {{ author_choice.affiliation }} | {{ author_choice.author_email }}
+      </option>
+      {% endfor %}
+    </select>
+    {% endfor %}
+    <br>
+    <br>
+    <strong>Title:</strong>
+    <input type="text" name="new_title" value="{{ informations.title }}">
+    <br>
+    <br>
+    <strong>Publisher:</strong>
+    <select name="new_publisher_selected">
+      {% for publisher in publishers %}
+      <option value="{{ informations.publisher_id }}" {% if informations.publisher_id == publisher.publisher_id %} selected {% endif %}> {{ publisher.publisher_name }}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <br>
+    <strong>Year:</strong>
+    <input type="number" name="new_year" value="{{ informations.year }}">
+    <br>
+    <br>
+    <strong>Type:</strong>
+    <input type="radio" name="new_type" value="Theory" {% if informations.type == "Theory" %}checked{% endif %}> Theory
+    <input type="radio" name="new_type" value="Practice" {% if informations.type == "Practice" %}checked{% endif %}> Practice
+    <br>
+
+    <h2> Optional fields </h2>
+    <strong>ISBN/ISSN:</strong>
+    <input type="text" name="new_isbn_issn" value="{{ informations.isbn_issn }}">
+    <br>
+    <strong>Volume:</strong>
+    <input type="text" name="new_volume" value="{{ informations.volume }}">
+    <br>
+    <strong>Number:</strong>
+    <input type="number" name="new_number" value="{{ informations.number }}">
+    <br>
+    <strong>Pages:</strong>
+      <input type="text" name="new_pages" value="{{ informations.pages }}">
+    <br>
+    <br>
+    <strong>Genre:</strong>
+    <br>
+
+    {% for genre in all_genres %}
+    <input type="checkbox" name="new_selected_genres" value="{{ genre.keyword_id }}" {% for specific_genre in specific_genres %}{% if specific_genre.genre_id == genre.keyword_id %}checked{% endif %}{% endfor %}>
+    {{ genre.keyword }}<br>
+    {% endfor %}
+
+    <button type="submit">Update</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ author_informations.author_initials }} {{author_informations.author_lastname}} </title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+    <!-- DISPLAY CURRENT INFORMATIONS OF THE AUTHOR -->
+	<h1>Author: {{ author_informations.author_initials }} {{author_informations.author_lastname}} (Firstname: {{ author_informations.author_firstnames }})</h1>
+    <strong>Country:</strong> {{ author_informations.country_code }}
+    <br>
+    <strong>Affiliation:</strong> {{ author_informations.affiliation }}
+    <br>
+    <strong>Email:</strong> {{ author_informations.author_email }}
+    <br>
+    <br>
+    <!-- UPDATE FORM PRE-FILLED WITH CURRENT INFOMRATIONS -->
+    <form method="post">
+        {% csrf_token %}
+            Firstname(s) (required):
+            <input type="text" name="new_firstnames" value="{{ author_informations.author_firstnames }}" ><br>
+        
+            Lastname (required):
+            <input type="text" name="new_lastname" value="{{ author_informations.author_lastname }}"><br>
+        
+            Country code (2 letters) (required):
+            <input type="text" name="new_country_code" pattern="[A-Za-z]{2}" title="Please enter a valid two-letter country code" value = "{{ author_informations.country_code }}"><br>
+        
+            Affiliation (optional):
+            <input type="text" name="new_affiliation" value="{{ author_informations.affiliation }}"><br> <!-- we need to add double quotes or it will be considered as string until the first whitespace character-->
+        
+            Email (optional):
+            <input type="email" name="new_email" value="{{ author_informations.author_email }}"><br>
+ 
+    <button type="submit">Update</button>
+    </form>
+
+</body>
+</html>

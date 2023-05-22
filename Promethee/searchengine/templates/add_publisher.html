@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Add publisher </title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+    <p> Check first the author already exists in the DB: </p>
+    
+    <!-- DISPLAY EXISTING PUBLISHERS -->
+    <select name="selected_publisher">
+      {% for publisher in publishers %}
+      <option value="{{ publisher.publisher_id }}">{{ publisher.publisher_name }}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <br>
+
+    <!-- FORM TO ADD A NEW PUBLISHER -->
+    <form method="post">
+      {% csrf_token %}
+      Publisher name:
+      <input type="text" name="new_publisher_name">
+      <button type="submit">Add new publisher</button>
+    </form>
+
+    <!-- DISPLAY ERROR IF PUBLISHER ALREADY EXISTS -->
+    <strong>{{ error }}</strong>
+
+</body>
+</html>

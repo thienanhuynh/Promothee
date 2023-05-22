@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main page</title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp&nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp&nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp&nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp&nbsp
+    <a href="/genres">Genres</a>
+    &nbsp&nbsp
+    <a href="/countries">Countries</a>
+    <h1>Welcome to the search engine</h1>
+
+    <!-- SEARCH TOOL -->
+    <form method="get">
+        Search by keyword in title or exact ISBN/ISSN:
+        <input type="text" name="search_keyword" placeholder="Enter a keyword">
+        <button type="submit">Search</button>
+    </form>
+    <form method="get">
+        Search by publisher:
+        <input type="text" name="search_publisher" placeholder="Enter a publisher name">
+        <button type="submit">Search</button>
+    </form>
+    <form method="get">
+        Search by author:
+        <input type="text" name="search_author" placeholder="Enter exact lastname">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- DISPLAY THE SEARCH WORD (IF ANY) -->
+    {% if search_keyword %}
+        <h1>Search results for "{{ search_keyword }}":</h1>
+    {% endif %}
+    {% if search_publisher %}
+    <h1>Search results for "{{ search_publisher }}":</h1>
+    {% endif %}
+    {% if search_author %}
+    <h1>Search results for "{{ search_author }}":</h1>
+    {% endif %}
+
+    <!-- DISPLAY ALL REFERENCES OR FILTERED REFERENCES -->
+    {% if filtered_authors %}
+        <h2>Authors ({{ filtered_authors_quantity }} results):</h2>
+        {% for single_author in filtered_authors %}
+        
+        <strong> Name: </strong> <a href="{% url 'author_detail' single_author.author_id %}">{{ single_author.author_initials }} {{ single_author.author_lastname }}</a> <br>
+        <strong>Country code:</strong> {{ single_author.country_code }} <br>
+        <strong>Affiliation:</strong> {{ single_author.affiliation }} <br>
+        <strong>Email:</strong> {{ single_author.author_email }} <br>
+        <br>
+        {% endfor %}
+    {% endif %}
+
+    {% if filtered_publishers %}
+        <h2>Publishers ({{ filtered_publishers_quantity }} results):</h2>
+        {% for single_publisher in filtered_publishers %}
+        <a href="{% url 'publisher_detail' single_publisher.publisher_id %}"> {{ single_publisher.publisher_name }}</a>
+        <br><br>
+        {% endfor %}
+    {% endif %}
+
+    {% if references %}
+        <h2>References ({{ references_quantity }} results):</h2>
+        <ul>
+        {% for reference in references %}
+            <li>
+                <strong>Author(s):</strong> {% for single_author in reference.authors %} <a href="{% url 'author_detail' single_author.author_id %}">{{ single_author.author_initials }} {{ single_author.author_lastname }}</a>, {% endfor %} <br>
+                <strong>Title:</strong> <a href="{% url 'reference_detail' reference.reference_id %}">{{ reference.title }}</a><br>
+                <strong>Publisher name:</strong> <a href="{% url 'publisher_detail' reference.publisher_id %}"> {{ reference.publisher_name }}</a> <br>
+                <strong>ISBN/ISSN:</strong> {{ reference.isbn_issn }}<br>
+                <strong>Year:</strong> {{ reference.year }}<br>
+                <strong>Volume:</strong> {{ reference.volume }}<br>
+                <strong>Number:</strong> {{ reference.number }}<br>
+                <strong>Pages:</strong> {{ reference.pages }}<br>
+                <strong>Type:</strong> {{ reference.type }}<br>
+                <strong>Genre:</strong> {% for genre in reference.genres %} {{ genre }}, {% endfor %} <br>
+                <br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No references found.</p>
+    {% endif %}
+
+</body>
+</html>

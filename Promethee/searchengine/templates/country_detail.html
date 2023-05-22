@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Countries </title>
+</head>
+<body>
+    <!-- OTHER PAGES -->
+    <a href="/search">Go to main page</a>
+    &nbsp
+    &nbsp
+    <a href="/add_reference">Add a new reference</a>
+    &nbsp
+    &nbsp
+    <a href="/add_author">Add author</a>
+    &nbsp
+    &nbsp
+    <a href="/add_publisher">Add publisher</a>
+    &nbsp
+    &nbsp
+    <a href="/genres">Genres</a>
+    &nbsp
+    &nbsp
+    <a href="/countries">Countries</a>
+
+        <!-- WE DISPLAY THE FORM TO ADD A NEW COUNTRY AS LONG AS WE DON'T UPDATE COUNTRY INFOS -->
+        {% if not show_update_form %}
+        <form method="post">
+            {% csrf_token %}
+            <h3> Add a new country: </h3>
+            Country code:
+            <input type="text" name="new_country_code">
+            <br>
+            Population in millions (optional):
+            <input type="text" name="new_population_in_millions">
+            <br>
+            Continent:
+            <input type="text" name="new_continent">
+            <br>
+            Researchers:
+            <input type="text" name="new_researchers">
+            <br>
+            <button type="submit">Add</button>
+        </form>
+        {%endif%}
+    
+        <!-- DISPLAY ERROR IF NEW COUNTRY ALREADY EXISTS -->
+        <strong> {{ error }} </strong>
+
+    <!-- DISPLAY ALL COUNTRIES AND THEIR INFOS -->
+    <form method="get">
+        <h2> Search by country: </h2>
+        <select name="choice" onchange="this.form.submit()">
+        {% for country in countries %}
+        <option value = "{{country.country_code}}" {% if country.country_code == searched_country_code %} selected {% endif %}> <strong> {{country.country_code}} </strong> [{{ country.continent }}] <br> Population (in millions): {{ country.population_in_millions }} | #Researchers: {{ country.researchers }} <br>
+        <br>
+        {% endfor %}
+        </select>
+        <button type="submit" name='update_form' value='TRUE'>Update</button>
+    </form>
+    
+    <!-- UPDATE FORM IF CHOSEN WITH CURRENT INFOS SHOWN -->
+    {% if show_update_form %}
+        <h2> Current informations </h2>
+        <strong>Country code:</strong> {{ country_details.country_code }}
+        <br>
+        <strong>Population (in millions):</strong> {{ country_details.population_in_millions }}
+        <br>
+        <strong>Continent:</strong> {{ country_details.continent }}
+        <br>
+        <strong>Researchers:</strong> {{ country_details.researchers }}
+        <br>
+        <br>
+        <form method="post">
+            {% csrf_token %}
+                Country code:
+                <input type="text" name="updated_country_code" value="{{ country_details.country_code }}" ><br>
+            
+                Population (in millions):
+                <input type="text" name="updated_population_in_millions" value="{{ country_details.population_in_millions }}"><br>
+            
+                Continent:
+                <input type="text" name="updated_continent" value = "{{ country_details.continent }}"><br>
+            
+                Researchers:
+                <input type="text" name="updated_researchers" value="{{ country_details.researchers }}"><br>
+    
+        <button type="submit" name'submit_update' value="TRUE">Update</button>
+        </form>
+    {% endif %}
+    
+    <!-- DISPLAY AUTHORS LINKED TO A COUNTRY -->
+    {% if searched_country_code %}
+        <h2>Authors for the country code "{{ searched_country_code }}" ({{ authors_quantity }} results):</h2>
+        <ul>
+        {% for author in authors_informations %}
+            <li>
+                <strong>Author(s):</strong> <a href="{% url 'author_detail' author.author_id %}">{{ author.author_initials }} {{ author.author_lastname }}</a>
+                <br>
+                <strong>Affiliation:</strong> {{ author.affiliation }}
+                <br>
+                <strong>Email:</strong> {{ author.author_email }}
+                <br>
+                <br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+</body>
+</html>
